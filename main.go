@@ -1,14 +1,18 @@
 package main
+
 import (
 	"context"
 	"log"
 	"net/http"
 	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
+
 var db *pgxpool.Pool
+
 func main() {
 	_ = godotenv.Load()
 	dsn := os.Getenv("DATABASE_URL")
@@ -32,7 +36,7 @@ func main() {
 	router.GET("/users", getUsers)
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8001"
+		port = "9004"
 	}
 	log.Println("🚀 Starting server on port", port)
 	router.Run(":" + port)

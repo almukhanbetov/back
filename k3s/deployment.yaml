@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back
+  namespace: back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: back
+  template:
+    metadata:
+      labels:
+        app: back
+    spec:
+      containers:
+        - name: back
+          image: almuko/back:latest   # 👈 твой Docker Hub репозиторий/образ
+          imagePullPolicy: Always
+          env:
+            - name: PORT
+              value: "9004"           # у тебя в main.go дефолт 9000
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-env
+                  key: DATABASE_URL
+          ports:
+            - containerPort: 9004
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 9004
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 9004
+            initialDelaySeconds: 10
+            periodSeconds: 10

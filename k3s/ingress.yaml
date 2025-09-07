@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: back
+  namespace: back
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+spec:
+  ingressClassName: nginx          # если у тебя nginx-ingress. Проверь: kubectl get ingressclass
+  rules:
+    - host: back.compnet.kz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: back
+                port:
+                  number: 80
+  # Если позже захочешь TLS:
+  # tls:
+  #   - hosts:
+  #       - back.compnet.kz
+  #     secretName: back-tls
